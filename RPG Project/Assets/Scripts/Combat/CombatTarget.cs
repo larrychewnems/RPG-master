@@ -5,7 +5,9 @@ using UnityEngine;
 namespace RPG.Combat {
     public class CombatTarget : MonoBehaviour
     {
-        
+        private void Test(){
+            Debug.Log("CombatTarget");
+        } 
     }
 }
 

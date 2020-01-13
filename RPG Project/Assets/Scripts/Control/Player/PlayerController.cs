@@ -11,8 +11,9 @@ namespace RPG.Control {
         private RPG.Movement.Mover mover;
         private bool clicked = false;
         private bool isEnemy = false;
+        private RPG.Combat.CombatTarget target;
 
-        [SerializeField] float stopDistance = 0.5f;
+        [SerializeField] float stopDistance = 0.5f;    //mouse holddown to move
         [SerializeField] float tabDownSpeed = 0.5f;    //mouse key tab down speed in sec.
 
         private void Awake()
@@ -30,26 +31,27 @@ namespace RPG.Control {
             if (Input.GetMouseButtonUp(0))
             {
                 RaycastHit[] hits = Physics.RaycastAll(GetMouseRay());
-                foreach (RaycastHit item in hits)
+                foreach (RaycastHit hit in hits)
                 {
-                    if (item.transform.tag == "Enemy")
+                    if (hit.transform.tag == "Enemy")
                     {
-                        isEnemy = true;
-                    } else {isEnemy = false;}
+                        target = hit.transform.GetComponent<RPG.Combat.CombatTarget>();
+                        break;
+                    } else {target= null;}
                 }
             }
 
-            if (isEnemy)
+            if (target)
             {
                 mover.StopMove();
-                InteractWithCombat();
+                InteractWithCombat(target);
             }
             else { InteractWithMovement(); }
         }
 
-        private void InteractWithCombat()
+        private void InteractWithCombat(RPG.Combat.CombatTarget target)
         {
-            Debug.Log("clicked on an Enemy!");
+            GetComponent<RPG.Combat.Fighter>().Attack(target);
 
         }
 
@@ -71,14 +73,11 @@ namespace RPG.Control {
 
             if (Input.GetMouseButton(0))
             {
+                //Adding mouse drag time
                 mouseKeyDownSec += Time.deltaTime;
-                //if (mouseKeyDownSec > tabDownSpeed && clicked)
-                //{
-                    clicked = true;
+                clicked = true;
 
-                //}
-                //mouseKeyDownSec = 0f;
-
+                //IsPointerOverGameObject, make sure we are not clicking on the UI item.
                 if (!UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
                 {
                     //clicked = true;
@@ -88,6 +87,7 @@ namespace RPG.Control {
             }
         }
 
+        //move player to clicked location
         private void MoveToCursor()
         {
             RaycastHit hit;
@@ -102,6 +102,7 @@ namespace RPG.Control {
 
         }
 
+        //make a ray cast to the click location to find the position.
         private static Ray GetMouseRay()
         {
             return Camera.main.ScreenPointToRay(Input.mousePosition);
