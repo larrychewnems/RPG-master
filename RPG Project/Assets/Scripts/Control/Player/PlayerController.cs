@@ -1,59 +1,111 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour
-{
-    private float mouseKeyDownSec = 0f;            //how long is the mouse key being held down.
-    private Mover mover;
-    private bool clicked = false;
+namespace RPG.Control {
 
-    [SerializeField] float stopDistance = 0.5f;
-    [SerializeField] float tabDownSpeed = 0.5f;    //mouse key tab down speed in sec.
-
-    private void Awake()
+    public class PlayerController : MonoBehaviour
     {
-        mover = GetComponent<Mover>();
-    }
+        private float mouseKeyDownSec = 0f;            //how long is the mouse key being held down.
+        private RPG.Movement.Mover mover;
+        private bool clicked = false;
+        private bool isEnemy = false;
 
-    void LateUpdate()
-    {
-        if (Input.GetMouseButton(0))
+        [SerializeField] float stopDistance = 0.5f;
+        [SerializeField] float tabDownSpeed = 0.5f;    //mouse key tab down speed in sec.
+
+        private void Awake()
         {
-            mouseKeyDownSec += Time.deltaTime;
-            //Debug.Log("mouse held time: " + mouseKeyDownSec);
-            //Debug.Log(UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject());
-            if(!UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
-            {
-                clicked=true;
-                MoveToCursor();
-            }  
+            mover = GetComponent<RPG.Movement.Mover>();
         }
 
-        if (Input.GetMouseButtonUp(0))
+        void LateUpdate()
         {
-            if (mouseKeyDownSec > tabDownSpeed && clicked)
+            MouseClickControl();
+        }
+
+        private void MouseClickControl()
+        {
+            if (Input.GetMouseButtonUp(0))
             {
-                clicked=false;
-                mover.StopMove();
+                RaycastHit[] hits = Physics.RaycastAll(GetMouseRay());
+                foreach (RaycastHit item in hits)
+                {
+                    if (item.transform.tag == "Enemy")
+                    {
+                        isEnemy = true;
+                    } else {isEnemy = false;}
+                }
             }
-            mouseKeyDownSec = 0f;
 
+            if (isEnemy)
+            {
+                mover.StopMove();
+                InteractWithCombat();
+            }
+            else { InteractWithMovement(); }
         }
-    }
 
-    private void MoveToCursor()
-    {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
-        bool hasHit = false;
-
-        hasHit = Physics.Raycast(ray, out hit);
-
-        if (hasHit)
+        private void InteractWithCombat()
         {
-            mover.MoveTo(hit.point, stopDistance);
+            Debug.Log("clicked on an Enemy!");
+
         }
 
+        private void InteractWithMovement()
+        {
+            if (Input.GetMouseButtonUp(0))
+            {
+                //mouseKeyDownSec += Time.deltaTime;
+                if (mouseKeyDownSec > tabDownSpeed && clicked){
+                    mover.StopMove();
+
+                } else if (!UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
+                {
+                    //clicked = true;
+                    MoveToCursor();
+                }
+                mouseKeyDownSec = 0f;
+            }
+
+            if (Input.GetMouseButton(0))
+            {
+                mouseKeyDownSec += Time.deltaTime;
+                //if (mouseKeyDownSec > tabDownSpeed && clicked)
+                //{
+                    clicked = true;
+
+                //}
+                //mouseKeyDownSec = 0f;
+
+                if (!UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
+                {
+                    //clicked = true;
+                    MoveToCursor();
+                }
+
+            }
+        }
+
+        private void MoveToCursor()
+        {
+            RaycastHit hit;
+            bool hasHit = false;
+
+            hasHit = Physics.Raycast(GetMouseRay(), out hit);
+
+            if (hasHit)
+            {
+                mover.MoveTo(hit.point, stopDistance);
+            }
+
+        }
+
+        private static Ray GetMouseRay()
+        {
+            return Camera.main.ScreenPointToRay(Input.mousePosition);
+        }
     }
+
 }

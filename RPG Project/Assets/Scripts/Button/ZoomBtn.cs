@@ -6,13 +6,20 @@ using UnityEngine.UI;
 public class ZoomBtn : MonoBehaviour
 {
     enum zoomLevels {zoom1=33, zoom2=40, zoom3=48}
+
     public Sprite[] sprite;
+
     [SerializeField] zoomLevels zoomLevel = zoomLevels.zoom1;
+    [SerializeField] float zoomSpeed = 1f;
 
     private int zoomLevelsCounts = System.Enum.GetValues(typeof(zoomLevels)).Length;
 
     private void Awake() {
         SetZoomLevel();
+    }
+
+    private void Update() {
+        ZoomCamera();
     }
 
     public void SetZoomLevel()
@@ -32,7 +39,14 @@ public class ZoomBtn : MonoBehaviour
             }
         }
 
-        zoomLevel = (zoomLevels) (System.Enum.GetValues(zoomLevel.GetType())).GetValue(index);
-        Camera.main.fieldOfView = (int) zoomLevel;
+        zoomLevel = (zoomLevels) (System.Enum.GetValues(zoomLevel.GetType())).GetValue(index); 
+    }
+
+    void ZoomCamera(){
+        float zoomDifference = (float)zoomLevel - Camera.main.fieldOfView;
+        Camera.main.fieldOfView += zoomDifference * zoomSpeed * Time.deltaTime;
+        if(Mathf.Abs(zoomDifference) <= 0.05f){
+            Camera.main.fieldOfView = (float)zoomLevel;
+        }
     }
 }
