@@ -7,14 +7,16 @@ namespace RPG.Control {
 
     public class PlayerController : MonoBehaviour
     {
-        private float mouseKeyDownSec = 0f;            //how long is the mouse key being held down.
+        private float mouseKeyDownSec = 0f;             //how long is the mouse key being held down.
         private RPG.Movement.Mover mover;
         private bool clicked = false;
         private bool isEnemy = false;
         private RPG.Combat.CombatTarget target;
 
-        [SerializeField] float stopDistance = 0.5f;    //mouse holddown to move
-        [SerializeField] float tabDownSpeed = 0.5f;    //mouse key tab down speed in sec.
+        [SerializeField] float stopDistance = 0.5f;     //mouse holddown to move
+        [SerializeField] float tabDownSpeed = 0.5f;     //mouse key tab down speed in sec.
+
+        public bool inAttackMode = false;               
 
         private void Awake()
         {
@@ -43,8 +45,13 @@ namespace RPG.Control {
 
             if (target)
             {
-                mover.StopMove();
-                InteractWithCombat(target);
+                if(inAttackMode){
+                    mover.StopMove();
+                    InteractWithCombat(target);
+                } else {
+                    Debug.Log("pointed to: " + target.name);       
+                }
+                
             }
             else { InteractWithMovement(); }
         }

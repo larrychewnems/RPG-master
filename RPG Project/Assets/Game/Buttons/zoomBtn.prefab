@@ -141,4 +141,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 448f3dd609dfb4f8d8dd34ff908c6302, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sprite:
+  - {fileID: 21300000, guid: 2d30f31f5d59a4cadafd1796037d89e9, type: 3}
+  - {fileID: 21300000, guid: cde242bc025564a23aed299220e2dea4, type: 3}
   zoomLevel: 33
+  zoomSpeed: 4
