@@ -1440,7 +1440,7 @@ GameObject:
   - component: {fileID: 1631152592}
   m_Layer: 0
   m_Name: Terrain
-  m_TagString: Untagged
+  m_TagString: Terrain
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 4294967295
@@ -1570,49 +1570,12 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1731543122}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1740387041 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3391097734210496280, guid: 72e6e0ea77f3e4baea52c63d18af7381,
-    type: 3}
-  m_PrefabInstance: {fileID: 7082510368505776601}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1740387045 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 459245013126267822, guid: 72e6e0ea77f3e4baea52c63d18af7381,
     type: 3}
   m_PrefabInstance: {fileID: 7082510368505776601}
   m_PrefabAsset: {fileID: 0}
---- !u!95 &1740387046
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1740387041}
-  m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: d288a0e4a2d923b46898986e979da643, type: 3}
-  m_Controller: {fileID: 9100000, guid: 1e2f1d23ae1f649c1ab7f90c6d0dfe9d, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &1740387048
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1740387041}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3d30ba2becd7542258e75c949516a73b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &1793162555
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2351,25 +2314,9 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 464437572, guid: 72e6e0ea77f3e4baea52c63d18af7381, type: 3}
-      propertyPath: stopDistance
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 464437572, guid: 72e6e0ea77f3e4baea52c63d18af7381, type: 3}
-      propertyPath: tabDownSpeed
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 464437573, guid: 72e6e0ea77f3e4baea52c63d18af7381, type: 3}
-      propertyPath: m_Speed
-      value: 5.66
-      objectReference: {fileID: 0}
-    - target: {fileID: 464437573, guid: 72e6e0ea77f3e4baea52c63d18af7381, type: 3}
-      propertyPath: m_Acceleration
-      value: 20
-      objectReference: {fileID: 0}
-    - target: {fileID: 464437573, guid: 72e6e0ea77f3e4baea52c63d18af7381, type: 3}
-      propertyPath: m_AngularSpeed
-      value: 1000
+    - target: {fileID: 1740387048, guid: 72e6e0ea77f3e4baea52c63d18af7381, type: 3}
+      propertyPath: combatDistince
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 459245013126267822, guid: 72e6e0ea77f3e4baea52c63d18af7381,
         type: 3}
@@ -2426,6 +2373,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1204412612656969459, guid: 72e6e0ea77f3e4baea52c63d18af7381,
+        type: 3}
+      propertyPath: attackBtn
+      value: 
+      objectReference: {fileID: 858499010635777356}
     - target: {fileID: 3391097734210496280, guid: 72e6e0ea77f3e4baea52c63d18af7381,
         type: 3}
       propertyPath: m_Name
@@ -2439,7 +2391,7 @@ MonoBehaviour:
     type: 3}
   m_PrefabInstance: {fileID: 7082510368505776601}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1740387041}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9c55f7a2cbf754f5393b0d06aa25f462, type: 3}

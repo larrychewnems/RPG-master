@@ -23,4 +23,28 @@ public class AttackBtn : MonoBehaviour
 
         playerController.inAttackMode = inAttackMode;
     }
+
+    public void setAttackModeOff()
+    {
+        inAttackMode = false;
+        if (inAttackMode)
+        {
+            GetComponent<Image>().sprite = buttonImageOn;
+        }
+        else { GetComponent<Image>().sprite = buttonImageOff; }
+        playerController.inAttackMode = inAttackMode;
+    }
+
+    public void setAttackModeOn()
+    {
+        inAttackMode = true;
+        if (inAttackMode)
+        {
+            GetComponent<Image>().sprite = buttonImageOn;
+        }
+        else { GetComponent<Image>().sprite = buttonImageOff; }
+        playerController.inAttackMode = inAttackMode;
+    }
+
+
 }
