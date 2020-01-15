@@ -18,6 +18,7 @@ namespace RPG.Control {
 
         private Movement.Mover mover;
         private string pointedAt;
+        private bool isMouseKeyDown = false;
         private bool isClicked = false;
         private bool isEnemy = false;
         private bool isUIObject = false;
@@ -37,49 +38,62 @@ namespace RPG.Control {
         private void MouseClickControl()
         {
 
+        //Set Control logic values*******************************************************
             //IsPointerOverGameObject, make sure we are not clicking on the UI item.
-            if(!UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject()) {
+            if(UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject()) {
                 isUIObject = true;
-            } else {isUIObject = false;}
-
-            //When Left Click is holding
-            if (Input.GetMouseButton(0)){
-                mouseKeyDownSec += Time.deltaTime;
-
-                if(mouseKeyDownSec > tabDownSpeed) {
-                    isDraging = true;
-                }
+                isMouseKeyDown = false;
+            } else if (Input.GetMouseButtonDown(0)){
+                isUIObject = false;
+                isMouseKeyDown = true;
             }
+            Debug.Log("PlayerController.MouseClickControl.isMouseKeyDown: " + isMouseKeyDown);
+            //When clicked on the map or map object
+            if (isMouseKeyDown) {
+                //When Left Click is holding
+                if (Input.GetMouseButton(0)){
+                    mouseKeyDownSec += Time.deltaTime;
 
-            //Is Left clicked on a Monster
-            if (Input.GetMouseButtonUp(0)) {
-                RaycastHit[] hits = Physics.RaycastAll(GetMouseRay());
-                foreach (RaycastHit hit in hits)
-                {
-                    Debug.Log("hits: " + hit.transform.tag);
-                    if (hit.transform.tag == "Enemy" || isEnemy)
+                    if(mouseKeyDownSec > tabDownSpeed) {
+                        isDraging = true;
+                    }
+                }
+
+                //Is Left clicked on a Monster
+                if (Input.GetMouseButtonUp(0)) {
+                    RaycastHit[] hits = Physics.RaycastAll(GetMouseRay());
+                    foreach (RaycastHit hit in hits)
                     {
-                        target = hit.transform.GetComponent<Combat.CombatTarget>();
-                        isEnemy = true;
-                    } else {isEnemy = false;}
+                        Debug.Log("hits: " + hit.transform.tag);
+                        if (hit.transform.tag == "Enemy" || isEnemy)
+                        {
+                            target = hit.transform.GetComponent<Combat.CombatTarget>();
+                            isEnemy = true;
+                        } else {isEnemy = false;}
+                    }
+
+                    //If clicked to move
+                    if (!isEnemy) {
+                        isClicked = true;
+                    } else {
+                        isClicked = false;
+                    }
+                    //reset variables on Key up
+                    isDraging = false;
+                    mouseKeyDownSec = 0f;
+                    isMouseKeyDown = false;
                 }
-
-                //reset variables on Key up
-                isClicked = false;
-                isDraging = false;
-                mouseKeyDownSec = 0f;
-
             }
-
-
+            
+        //Run control Logic ************************************
             if (isUIObject){
                 return;
             } else if (isEnemy) {
                 InteractWithCombat();
-            } else if (isDraging) {
+            } else if (isDraging || isClicked) {
                 InteractWithMovement();
             }
-            
+
             // if (InteractWithCombat()) return;
             // //Debug.Log("PlayerController.MouseClickControl: ");
             // else { InteractWithMovement(); }
@@ -127,6 +141,7 @@ namespace RPG.Control {
 
         private void InteractWithMovement()
         {
+            /*
             if (Input.GetMouseButton(0))
             {
                 mouseKeyDownSec += Time.deltaTime;
@@ -160,6 +175,19 @@ namespace RPG.Control {
                     MoveToCursor();
                 //}
 
+            }
+            */
+
+            //clicked but not draging, player walk to clicked location
+            if(isClicked && !isDraging) {
+                Debug.Log("mouse key Up");
+                MoveToCursor();
+            }//draging, play follows draging
+            else if(isDraging) {
+                Debug.Log("mouse key draging");
+                MoveToCursor();
+            } else { //clicked and was draged, stop player
+                mover.StopMove();
             }
         }
 
