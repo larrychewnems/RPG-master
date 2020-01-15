@@ -8,84 +8,133 @@ namespace RPG.Control {
 
     public class PlayerController : MonoBehaviour
     {
-        private float mouseKeyDownSec = 0f;             //how long is the mouse key being held down.
-        private Movement.Mover mover;
-        private bool clicked = false;
-        private bool isEnemy = false;
-        private string pointedAt;
-
+        [SerializeField] private float mouseKeyDownSec = 0f;             //how long is the mouse key being held down.
         [SerializeField] private Combat.CombatTarget target;
-
         [SerializeField] float stopDistance = 0.5f;     //mouse holddown to move
         [SerializeField] float tabDownSpeed = 0.5f;     //mouse key tab down speed in sec.
 
         public bool inAttackMode = false;    
-        public AttackBtn attackBtn;           
+        public AttackBtn attackBtn;
+
+        private Movement.Mover mover;
+        private string pointedAt;
+        private bool isClicked = false;
+        private bool isEnemy = false;
+        private bool isUIObject = false;
+        private bool isDraging = false;
+
 
         private void Awake()
         {
             mover = GetComponent<Movement.Mover>();
         }
 
-        void LateUpdate()
+        void Update()
         {
             MouseClickControl();
         }
 
         private void MouseClickControl()
         {
+
             //IsPointerOverGameObject, make sure we are not clicking on the UI item.
             if(!UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject()) {
-                if (InteractWithCombat()) { return; }
-                InteractWithMovement();
-            }
-            
-        }
+                isUIObject = true;
+            } else {isUIObject = false;}
 
-        private bool InteractWithCombat()
-        {
-            if (Input.GetMouseButtonDown(0)) // || Input.GetMouseButton(0))
-            {
+            //When Left Click is holding
+            if (Input.GetMouseButton(0)){
+                mouseKeyDownSec += Time.deltaTime;
+
+                if(mouseKeyDownSec > tabDownSpeed) {
+                    isDraging = true;
+                }
+            }
+
+            //Is Left clicked on a Monster
+            if (Input.GetMouseButtonUp(0)) {
                 RaycastHit[] hits = Physics.RaycastAll(GetMouseRay());
                 foreach (RaycastHit hit in hits)
                 {
                     Debug.Log("hits: " + hit.transform.tag);
-                    if (hit.transform.tag == "Enemy")
+                    if (hit.transform.tag == "Enemy" || isEnemy)
                     {
-                        //pointedAt = hit.transform.tag;
                         target = hit.transform.GetComponent<Combat.CombatTarget>();
-                        break;
-                    }
-                    else { 
-                        attackBtn.setAttackModeOff();
-                        //pointedAt = null; 
-                    }
+                        isEnemy = true;
+                    } else {isEnemy = false;}
                 }
-                return false;  //Player pointed to another location, walking away from target, but keep selected target
+
+                //reset variables on Key up
+                isClicked = false;
+                isDraging = false;
+                mouseKeyDownSec = 0f;
+
             }
 
+
+            if (isUIObject){
+                return;
+            } else if (isEnemy) {
+                InteractWithCombat();
+            } else if (isDraging) {
+                InteractWithMovement();
+            }
+            
+            // if (InteractWithCombat()) return;
+            // //Debug.Log("PlayerController.MouseClickControl: ");
+            // else { InteractWithMovement(); }
+
+            
+        }
+
+        private void InteractWithCombat()
+        {
+            // if (Input.GetMouseButtonDown(0)) // || Input.GetMouseButton(0))
+            // {
+            //     RaycastHit[] hits = Physics.RaycastAll(GetMouseRay());
+            //     foreach (RaycastHit hit in hits)
+            //     {
+            //         Debug.Log("hits: " + hit.transform.tag);
+            //         if (hit.transform.tag == "Enemy")
+            //         {
+            //             //pointedAt = hit.transform.tag;
+            //             target = hit.transform.GetComponent<Combat.CombatTarget>();
+            //             break;
+            //         }
+            //         else { 
+
+            //             //pointedAt = null; 
+            //         }
+            //     }
+            //     attackBtn.setAttackModeOff();
+            //     return false;  //Player pointed to another location, walking away from target, but keep selected target
+            // }
 
             if (target != null && inAttackMode)
             {
                 Debug.Log("Attack");
                 mover.StopMove();
                 GetComponent<Combat.Fighter>().Attack(target);
-                return true; //selected a target
+                //return true; //selected a target
             } else if (target != null)
             {
                 Debug.Log("selected a target: " + target.name);
-                return true;
+                //return true;
             }
 
-            return false; //no target
+            //return false; //no target
         }
 
         private void InteractWithMovement()
         {
+            if (Input.GetMouseButton(0))
+            {
+                mouseKeyDownSec += Time.deltaTime;
+            }
             if (Input.GetMouseButtonUp(0))
             {
                 //mouseKeyDownSec += Time.deltaTime;
-                if (mouseKeyDownSec > tabDownSpeed && clicked){
+                if (mouseKeyDownSec > tabDownSpeed && isClicked){
                     mover.StopMove();
 
                 } else if (!UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
@@ -97,17 +146,17 @@ namespace RPG.Control {
                 mouseKeyDownSec = 0f;
             }
 
-            if (Input.GetMouseButton(0))
+            if (Input.GetMouseButton(0) && mouseKeyDownSec > 0.1f)
             {
                 //Adding mouse drag time
-                mouseKeyDownSec += Time.deltaTime;
-                clicked = true;
+
+                isClicked = true;
 
                 //IsPointerOverGameObject, make sure we are not clicking on the UI item.
                 //if (!UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
                 //{
                     //clicked = true;
-                    //Debug.Log("mouse key draging");
+                    Debug.Log("mouse key draging");
                     MoveToCursor();
                 //}
 

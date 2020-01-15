@@ -7,6 +7,12 @@ namespace RPG.Movement{
 
     public class Mover : MonoBehaviour
     {
+        NavMeshAgent navMeshAgent;
+        
+        private void Start() {
+            navMeshAgent = GetComponent<NavMeshAgent>();
+        }
+
         void LateUpdate()
         {
             UpdateAnimator();
@@ -15,20 +21,19 @@ namespace RPG.Movement{
         public void MoveTo(Vector3 destination, float stopDistance, string testMessage)
         {
             //Debug.Log("Mover.MoveTo.testMessage: " + testMessage + ", destination: " + destination);
-            GetComponent<NavMeshAgent>().stoppingDistance = stopDistance;
-            GetComponent<NavMeshAgent>().isStopped = false;
-            GetComponent<NavMeshAgent>().destination = destination;
+            navMeshAgent.stoppingDistance = stopDistance;
+            navMeshAgent.isStopped = false;
+            navMeshAgent.destination = destination;
         }
 
         public void StopMove()
         {
-
-            GetComponent<NavMeshAgent>().isStopped = true;
+            navMeshAgent.isStopped = true;
         }
 
         private void UpdateAnimator()
         {
-            Vector3 velocity = GetComponent<NavMeshAgent>().velocity;
+            Vector3 velocity = navMeshAgent.velocity;
             Vector3 localVelocity = transform.InverseTransformDirection(velocity);
             float speed = localVelocity.z;
 

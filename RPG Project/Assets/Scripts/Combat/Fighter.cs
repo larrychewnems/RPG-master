@@ -9,7 +9,7 @@ namespace RPG.Combat {
         private Movement.Mover mover;
         [SerializeField] private Transform target;
 
-        [SerializeField] float combatDistince = 2f;
+        [SerializeField] float weaponRange = 2f;
 
         void LateUpdate() {
             
@@ -21,7 +21,7 @@ namespace RPG.Combat {
             if (target)
             {
                 //Debug.Log("Fighter Update");
-                GetComponent<Mover>().MoveTo(target.transform.position, combatDistince, "Fighter.Update");
+                GetComponent<Mover>().MoveTo(target.transform.position, weaponRange, "Fighter.Update");
             }
             
        }
