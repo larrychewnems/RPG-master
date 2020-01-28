@@ -47,25 +47,31 @@ namespace RPG.Control {
                 isUIObject = false;
                 isMouseKeyDown = true;
             }
-            Debug.Log("PlayerController.MouseClickControl.isMouseKeyDown: " + isMouseKeyDown);
+            //Debug.Log("PlayerController.MouseClickControl.isMouseKeyDown: " + isMouseKeyDown);
+
+            
             //When clicked on the map or map object
             if (isMouseKeyDown) {
+
                 //When Left Click is holding
-                if (Input.GetMouseButton(0)){
+                if (Input.GetMouseButton(0))
+                {
                     mouseKeyDownSec += Time.deltaTime;
 
-                    if(mouseKeyDownSec > tabDownSpeed) {
+                    if (mouseKeyDownSec > tabDownSpeed)
+                    {
                         isDraging = true;
                     }
                 }
 
+                Debug.Log("PlayerController.MouseClickControl.isMouseKeyDown:" + isMouseKeyDown.ToString());
                 //Is Left clicked on a Monster
                 if (Input.GetMouseButtonUp(0)) {
                     RaycastHit[] hits = Physics.RaycastAll(GetMouseRay());
                     foreach (RaycastHit hit in hits)
                     {
                         Debug.Log("hits: " + hit.transform.tag);
-                        if (hit.transform.tag == "Enemy" || isEnemy)
+                        if (hit.transform.tag == "Enemy")
                         {
                             target = hit.transform.GetComponent<Combat.CombatTarget>();
                             isEnemy = true;
@@ -82,13 +88,14 @@ namespace RPG.Control {
                     isDraging = false;
                     mouseKeyDownSec = 0f;
                     isMouseKeyDown = false;
+                    isUIObject = false;
                 }
             }
             
         //Run control Logic ************************************
             if (isUIObject){
                 return;
-            } else if (isEnemy) {
+            } else if (target != null && inAttackMode) {
                 InteractWithCombat();
             } else if (isDraging || isClicked) {
                 InteractWithMovement();
@@ -189,6 +196,9 @@ namespace RPG.Control {
             } else { //clicked and was draged, stop player
                 mover.StopMove();
             }
+
+            //reset isClicked
+            isClicked=false;
         }
 
         //move player to clicked location

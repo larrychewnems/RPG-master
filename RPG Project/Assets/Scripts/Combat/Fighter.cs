@@ -21,7 +21,7 @@ namespace RPG.Combat {
             if (target)
             {
                 //Debug.Log("Fighter Update");
-                GetComponent<Mover>().MoveTo(target.transform.position, weaponRange, "Fighter.Update");
+                GetComponent<Movement.Mover>().MoveTo(target.transform.position, weaponRange, "Fighter.Update");
             }
             
        }

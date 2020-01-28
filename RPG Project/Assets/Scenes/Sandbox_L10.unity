@@ -2314,6 +2314,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 464437572, guid: 72e6e0ea77f3e4baea52c63d18af7381, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1740387048, guid: 72e6e0ea77f3e4baea52c63d18af7381, type: 3}
       propertyPath: combatDistince
       value: 2
