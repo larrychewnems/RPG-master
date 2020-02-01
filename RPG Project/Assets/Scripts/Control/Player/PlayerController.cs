@@ -91,13 +91,17 @@ namespace RPG.Control {
                     isUIObject = false;
                 }
             }
+
             
         //Run control Logic ************************************
-            if (isUIObject){
-                return;
-            } else if (target != null && inAttackMode) {
+            if (isEnemy && inAttackMode) {
+                Debug.Log("PlayerController.MouseClickControl.targer: "+ target + " inAttackMode: " + inAttackMode);
                 InteractWithCombat();
-            } else if (isDraging || isClicked) {
+            } else if (isUIObject)
+            {
+                return;
+            }
+            else if (isDraging || isClicked) {
                 InteractWithMovement();
             }
 
